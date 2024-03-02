@@ -47,6 +47,22 @@ productsRouter.get('/', async (_req, res, next) => {
     }
 });
 
+productsRouter.get('/:productId', async (req, res, next) => {
+    try {
+        const product = await Product
+            .findById(req.params.productId)
+            .populate('user', 'displayName phone');
+
+        if (!product) {
+            return res.status(404).send({ message: 'Товар не найден' });
+        }
+
+        return res.send(product);
+    } catch (err) {
+        return next(err);
+    }
+});
+
 
 
 
