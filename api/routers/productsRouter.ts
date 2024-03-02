@@ -63,7 +63,40 @@ productsRouter.get('/:productId', async (req, res, next) => {
     }
 });
 
+productsRouter.get('/category/:category', async (req, res, next) => {
+    try {
+        const category = req.params.category;
 
+        const products = await Product.find({ category });
+
+        return res.send(products);
+    } catch (err) {
+        return next(err);
+    }
+});
+
+productsRouter.delete('/:productId', auth, async (req: RequestWithUser, res, next) => {
+    try {
+        const productId = req.params.productId;
+        const userId = req.user?._id;
+
+        const product = await Product.findById(productId);
+
+        if (!product) {
+            return res.status(404).send({ message: 'No product' });
+        }
+
+        if (product.user.toString() !== userId?.toString()) {
+            return res.status(403).send({ message: 'Ypu are not creator of this post' });
+        }
+
+        await Product.findByIdAndDelete(productId);
+
+        return res.send({ message: 'Product deleted' });
+    } catch (err) {
+        return next(err);
+    }
+});
 
 
 export default productsRouter;
