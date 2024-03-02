@@ -1,11 +1,26 @@
-
-
+import { Container, CssBaseline } from '@mui/material';
+import {Route, Routes} from 'react-router-dom';
+import Register from './features/users/Register';
+import Login from "./features/users/Login.tsx";
+import AppToolbar from "./components/UI/AppToolBar.tsx";
 const App = () => {
 
     return (
-        <div>
-            App will be here
-        </div>
+        <>
+            <CssBaseline/>
+            <header>
+                <AppToolbar/>
+            </header>
+            <main>
+                <Container maxWidth="xl">
+                    <Routes>
+                        <Route path="/register" element={<Register/>} />
+                        <Route path="/login" element={<Login/>} />
+                        <Route path="*" element={<h1>Not Found</h1>} />
+                    </Routes>
+                </Container>
+            </main>
+        </>
     );
 };
 
