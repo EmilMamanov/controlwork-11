@@ -63,3 +63,30 @@ export const fetchCategoryProducts = createAsyncThunk<Product[], string>(
         return productsResponse.data;
     }
 );
+
+export const fetchProductById = createAsyncThunk<Product, string, { state: RootState }>(
+    'products/fetchById',
+    async (productId) => {
+        const productIdResponse = await axiosApi.get<Product>(`/products/${productId}`);
+        return productIdResponse.data;
+    }
+);
+
+export const deleteProduct = createAsyncThunk<void, string, { state: RootState }>(
+    'products/delete',
+    async (productId, { getState }) => {
+        try {
+            const token = getState().users.user?.token;
+            const response = await axiosApi.delete(`/products/${productId}`, {
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                },
+            });
+
+            console.log('Ответ удаления', response.data);
+        } catch (error) {
+            console.error('Ошибка при удалении', error);
+            throw error;
+        }
+    }
+);
